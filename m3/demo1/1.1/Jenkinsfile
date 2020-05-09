@@ -23,11 +23,15 @@ pipeline {
         }
         stage('Unit Test') {
             steps {
+              // Executa os comandos no diretório ./m3/src
               dir('./m3/src') {
                 sh '''
                     dotnet test --logger "trx;LogFileName=Pi.Math.trx" Pi.Math.Tests/Pi.Math.Tests.csproj
                     dotnet test --logger "trx;LogFileName=Pi.Runtime.trx" Pi.Runtime.Tests/Pi.Runtime.Tests.csproj
                 '''
+                // https://plugins.jenkins.io/mstest/
+                // O plug-in MSTest analisa os arquivos dos relatórios de execução de teste (TRX) gerados pelo mstest e vstest.console. 
+                //Esses arquivos incluem um resumo da execução do teste e dados detalhados sobre o que aconteceu durante a execução dos testes. 
                 mstest testResultsFile:"**/*.trx", keepLongStdio: true
               }
             }
